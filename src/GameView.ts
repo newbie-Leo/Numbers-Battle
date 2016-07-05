@@ -6,12 +6,15 @@ class GameView extends egret.Sprite
     private playground: egret.Sprite;
     private game_level: GameLevel;
     private target_field: egret.Sprite;
+     private cur_field: egret.Sprite;
     private level_field: egret.Sprite;
     private score_field: egret.Sprite;
     
     private tagert_text_field: egret.TextField;
+    private cur_text_field: egret.TextField;
     private level_text_field: egret.TextField;
     private score_text_field: egret.TextField;
+   
     
     private target_num: number = 0;
     
@@ -56,6 +59,7 @@ class GameView extends egret.Sprite
     {   
         this.game_level = new GameLevel();
         this.init_level_ground();
+        // this.init_cur_ground();
         this.init_playground();
         var level: number = 1;
         var sub_level: number = 1;
@@ -106,14 +110,99 @@ class GameView extends egret.Sprite
         this.tagert_text_field.textAlign = egret.HorizontalAlign.CENTER;
         this.tagert_text_field.bold = true;
         this.target_field.addChild(this.tagert_text_field);
-        
-        
-        
-        
+
         level_ground.addChild(this.target_field);
         this.addChild(level_ground);
+
+        // ==================右上角当前点击值============================
+
+        var cur_ground = new egret.Sprite();
+
+        cur_ground.x = this.width * 0.9 - (width - 10) / 3;
+        cur_ground.y = y;
+        cur_ground.width = width;
+        cur_ground.height = this.height * 0.2;
+        this.cur_field = new egret.Sprite();
+        this.cur_field.x = 5;
+        this.cur_field.y = 5;
+        this.cur_field.width = (width - 10) / 3;
+        this.cur_field.height = (width - 10) / 3;
+        this.cur_field.graphics.beginFill(0x6699FF);
+        this.cur_field.graphics.drawRoundRect(0, 0, this.target_field.width, this.target_field.width, 10, 10);
+        this.cur_field.graphics.endFill();
+        var cur_label = new egret.TextField();
+        cur_label.text = "Cur:";
+        cur_label.fontFamily = "SimHei";
+        cur_label.textColor = 0xCC0000;
+        cur_label.size = cur_label.size;
+        cur_label.width = this.target_field.width;
+        cur_label.height = this.target_field.height /4;
+        cur_label.bold = true;
+        cur_label.stroke = 3;
+        cur_label.x = 10;
+        cur_label.y = 5;
+        this.cur_field.addChild(cur_label);
+        this.cur_text_field = new egret.TextField();
+        this.cur_text_field.text = this.target_num.toString();
+        this.cur_text_field.width = this.target_field.width;
+        this.cur_text_field.y = this.target_field.width * 0.3 
+        this.cur_text_field.height = this.target_field.height * 0.7;
+        this.cur_text_field.size = this.target_field.width * 0.7;
+        this.cur_text_field.verticalAlign = egret.VerticalAlign.MIDDLE;
+        this.cur_text_field.textAlign = egret.HorizontalAlign.CENTER;
+        this.cur_text_field.bold = true;
+        this.cur_field.addChild(this.cur_text_field);
+       
+        cur_ground.addChild(this.cur_field);
+        this.addChild(cur_ground);
     }
-    
+
+
+    // private init_cur_ground(){
+
+    //     var cur_ground = new egret.Sprite();
+    //     cur_ground.x = x;
+    //     cur_ground.y = y;
+    //     cur_ground.width = width;
+    //     cur_ground.height = this.height * 0,2;
+    //     cur_ground.graphics.beginFill(0xFFCC99);
+    //     cur_ground.graphics.drawRoundRect(0, 0, width, width, 10, 10);
+    //     cur_ground.graphics.endFill();
+    //     this.cur_field = new egret.Sprite();
+    //     this.cur_field.x = 5;
+    //     this.cur_field.y = 5;
+    //     this.cur_field.width = (width - 10) / 3;
+    //     this.cur_field.height = (width - 10) / 3;
+    //     this.cur_field.graphics.beginFill(0x6699FF);
+    //     this.cur_field.graphics.drawRoundRect(0, 0, this.target_field.width, this.target_field.width, 10, 10);
+    //     this.cur_field.graphics.endFill();
+    //     var cur_label = new egret.TextField();
+    //     cur_label.text = "Cur:";
+    //     cur_label.fontFamily = "SimHei";
+    //     cur_label.textColor = 0xCC0000;
+    //     cur_label.size = cur_label.size;
+    //     cur_label.width = this.target_field.width;
+    //     cur_label.height = this.target_field.height /4;
+    //     cur_label.bold = true;
+    //     cur_label.stroke = 3;
+    //     cur_label.x = 10;
+    //     cur_label.y = 5;
+    //     this.target_field.addChild(cur_label);
+    //     this.cur_text_field = new egret.TextField();
+    //     this.cur_text_field.text = this.target_num.toString();
+    //     this.cur_text_field.width = this.target_field.width;
+    //     this.cur_text_field.y = this.target_field.width * 0.3 
+    //     this.cur_text_field.height = this.target_field.height * 0.7;
+    //     this.cur_text_field.size = this.target_field.width * 0.7;
+    //     this.cur_text_field.verticalAlign = egret.VerticalAlign.MIDDLE;
+    //     this.cur_text_field.textAlign = egret.HorizontalAlign.CENTER;
+    //     this.cur_text_field.bold = true;
+    //     this.cur_field.addChild(this.cur_text_field);
+       
+    //     cur_ground.addChild(this.cur_field);
+    //     this.addChild(cur_ground);
+    // }
+
     private init_playground(): void {
         var width = this.width * 0.9;
         var x = (this.width - width)/2;
@@ -262,5 +351,6 @@ class GameView extends egret.Sprite
             this.number_bits[m][n].backgroundColor = 0xFF9999;
         }
         console.log(sum);
+        this.cur_text_field.text = sum.toString();
     }
 }

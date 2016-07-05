@@ -26,24 +26,28 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var LoadingUI = (function (_super) {
-    __extends(LoadingUI, _super);
-    function LoadingUI() {
-        _super.call(this);
-        this.createView();
+
+
+class ThemeAdapter implements eui.IThemeAdapter {
+
+    /**
+     * 解析主题
+     * @param url 待解析的主题url
+     * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+     * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+     * @param thisObject 回调的this引用
+     */
+    public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
+        function onGetRes(e:string):void {
+            compFunc.call(thisObject, e);
+        }
+        function onError(e:RES.ResourceEvent):void {
+            if(e.resItem.url == url) {
+                RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onError, null);
+                errorFunc.call(thisObject);
+            }
+        }
+        RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onError, null);
+        RES.getResByUrl(url, onGetRes, this, RES.ResourceItem.TYPE_TEXT);
     }
-    var d = __define,c=LoadingUI;p=c.prototype;
-    p.createView = function () {
-        this.textField = new egret.TextField();
-        this.addChild(this.textField);
-        this.textField.y = 300;
-        this.textField.width = 480;
-        this.textField.height = 100;
-        this.textField.textAlign = "center";
-    };
-    p.setProgress = function (current, total) {
-        this.textField.text = "Loading..." + current + "/" + total;
-    };
-    return LoadingUI;
-})(egret.Sprite);
-egret.registerClass(LoadingUI,"LoadingUI");
+}
