@@ -6,7 +6,7 @@ class GameView extends egret.Sprite
     private playground: egret.Sprite;
     private game_level: GameLevel;
     private target_field: egret.Sprite;
-     private cur_field: egret.Sprite;
+    private cur_field: egret.Sprite;
     private level_field: egret.Sprite;
     private score_field: egret.Sprite;
     
@@ -15,9 +15,12 @@ class GameView extends egret.Sprite
     private level_text_field: egret.TextField;
     private score_text_field: egret.TextField;
    
-    
     private target_num: number = 0;
-    
+    private timeBar:egret.Sprite;
+
+    private timer:egret.Timer
+    private timePassed: number = 0;
+
     public constructor(x: number, y: number, width: number, height: number)
     {
         super();
@@ -39,7 +42,7 @@ class GameView extends egret.Sprite
             var tmp: Array<number> = []
             var bit_tmp: Array<egret.TextField> = [];
             for(var j: number = 0;j < col; j++) {
-                var num: number = Math.floor(Math.random() * 2);
+                var num: number = this.getRandom(0, this.game_level.max_number);
                 tmp.push(num);
                 var label:egret.TextField = new egret.TextField(); 
                 label.text = num.toString();
@@ -50,7 +53,28 @@ class GameView extends egret.Sprite
             this.number_boxes.push(tmp);
             this.number_bits.push(bit_tmp);
         }
-        console.log(this.number_boxes[0]);
+    }
+
+    private getRandom(min: number, max: number){
+        var r = Math.random() * (max - min);
+        var re = Math.round(r + min);
+        re = Math.max(Math.min(re, max), min)     
+        return re;
+    }
+
+    private get_target_num():void{
+        var x = this.getRandom(0, this.playground.width);
+        var y = this.getRandom(0, this.playground.width);
+        var target_boxes = this.get_nears_from_xy(x, y);
+        var sum = 0;
+        for(var k = 0;k < target_boxes.length; k ++ ){ 
+            var m = target_boxes[k][0];
+            var n = target_boxes[k][1];
+            var cur = this.number_boxes[m][n];
+            sum = cur + sum;
+        }
+        this.target_num = sum
+        this.tagert_text_field.text = this.target_num.toString();
     }
 
     private scoreText:egret.BitmapText;
@@ -59,11 +83,13 @@ class GameView extends egret.Sprite
     {   
         this.game_level = new GameLevel();
         this.init_level_ground();
-        // this.init_cur_ground();
         this.init_playground();
+        this.init_time_bar();
         var level: number = 1;
         var sub_level: number = 1;
         this.updateNumbers(this.game_level.box_num);
+        this.get_target_num();
+        this.init_paly_pannel(this.game_level.box_num);
         this.init_paly_pannel(this.game_level.box_num);
         this.startgame();
     }
@@ -118,8 +144,8 @@ class GameView extends egret.Sprite
 
         var cur_ground = new egret.Sprite();
 
-        cur_ground.x = this.width * 0.9 - (width - 10) / 3;
-        cur_ground.y = y;
+        cur_ground.x = width - (width - 10) / 3 - 10;
+        cur_ground.y = 0;
         cur_ground.width = width;
         cur_ground.height = this.height * 0.2;
         this.cur_field = new egret.Sprite();
@@ -143,7 +169,9 @@ class GameView extends egret.Sprite
         cur_label.y = 5;
         this.cur_field.addChild(cur_label);
         this.cur_text_field = new egret.TextField();
-        this.cur_text_field.text = this.target_num.toString();
+        this.cur_text_field.background = true;
+        this.cur_text_field.backgroundColor = 0x6699FF
+        this.cur_text_field.text = '';
         this.cur_text_field.width = this.target_field.width;
         this.cur_text_field.y = this.target_field.width * 0.3 
         this.cur_text_field.height = this.target_field.height * 0.7;
@@ -154,54 +182,10 @@ class GameView extends egret.Sprite
         this.cur_field.addChild(this.cur_text_field);
        
         cur_ground.addChild(this.cur_field);
-        this.addChild(cur_ground);
+        level_ground.addChild(cur_ground);
     }
 
 
-    // private init_cur_ground(){
-
-    //     var cur_ground = new egret.Sprite();
-    //     cur_ground.x = x;
-    //     cur_ground.y = y;
-    //     cur_ground.width = width;
-    //     cur_ground.height = this.height * 0,2;
-    //     cur_ground.graphics.beginFill(0xFFCC99);
-    //     cur_ground.graphics.drawRoundRect(0, 0, width, width, 10, 10);
-    //     cur_ground.graphics.endFill();
-    //     this.cur_field = new egret.Sprite();
-    //     this.cur_field.x = 5;
-    //     this.cur_field.y = 5;
-    //     this.cur_field.width = (width - 10) / 3;
-    //     this.cur_field.height = (width - 10) / 3;
-    //     this.cur_field.graphics.beginFill(0x6699FF);
-    //     this.cur_field.graphics.drawRoundRect(0, 0, this.target_field.width, this.target_field.width, 10, 10);
-    //     this.cur_field.graphics.endFill();
-    //     var cur_label = new egret.TextField();
-    //     cur_label.text = "Cur:";
-    //     cur_label.fontFamily = "SimHei";
-    //     cur_label.textColor = 0xCC0000;
-    //     cur_label.size = cur_label.size;
-    //     cur_label.width = this.target_field.width;
-    //     cur_label.height = this.target_field.height /4;
-    //     cur_label.bold = true;
-    //     cur_label.stroke = 3;
-    //     cur_label.x = 10;
-    //     cur_label.y = 5;
-    //     this.target_field.addChild(cur_label);
-    //     this.cur_text_field = new egret.TextField();
-    //     this.cur_text_field.text = this.target_num.toString();
-    //     this.cur_text_field.width = this.target_field.width;
-    //     this.cur_text_field.y = this.target_field.width * 0.3 
-    //     this.cur_text_field.height = this.target_field.height * 0.7;
-    //     this.cur_text_field.size = this.target_field.width * 0.7;
-    //     this.cur_text_field.verticalAlign = egret.VerticalAlign.MIDDLE;
-    //     this.cur_text_field.textAlign = egret.HorizontalAlign.CENTER;
-    //     this.cur_text_field.bold = true;
-    //     this.cur_field.addChild(this.cur_text_field);
-       
-    //     cur_ground.addChild(this.cur_field);
-    //     this.addChild(cur_ground);
-    // }
 
     private init_playground(): void {
         var width = this.width * 0.9;
@@ -223,8 +207,8 @@ class GameView extends egret.Sprite
         var col: number = 5; //间隔
         var l_width = (this.playground.width - col * (len + 1)) / len;
         
-        var x: number = 5;
-        var y: number = 5;
+        var x = 5;
+        var y = 5;
             
         for(var i: number = 0;i < len;i++)
         {   
@@ -247,12 +231,50 @@ class GameView extends egret.Sprite
             x = 5;
             y = y + l_width + 5;
         }
+    }
+
+    public init_time_bar():void
+    {
+        this.timer = new egret.Timer(1000,10);
+        this.timeBar = new egret.Sprite();;
+        var width = this.width * 0.9;
+
+        this.timeBar.width = width - 10;
+        this.timeBar.height = 20;
         
+        var x = (this.width - width)/2;
+        this.timeBar.x = x + 5;
+        this.timeBar.y = 200;
+        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.drawRoundRect(0, 0, this.timeBar.width, this.timeBar.height, 10, 10);
+        this.timeBar.graphics.endFill();
+        
+        console.log("添加时间条");
+        this.addChild(this.timeBar);
+        this.timer.addEventListener(egret.TimerEvent.TIMER,this.timerFunc,this);
+        this.timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE,this.timerComFunc,this);
+    }
+
+    public timerFunc():void
+    {
+        console.log("pass time");
+        this.timePassed = this.timePassed + 1;
+        this.timeBar.graphics.clear()
+        // this.timeBar.width = this.timeBar.width - 10;
+        var width = this.timeBar.width * (1 - this.timePassed / 10);
+        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.drawRoundRect(0, 0, width, this.timeBar.height, 10, 10);
+        this.timeBar.graphics.endFill();
+    }
+
+    public timerComFunc():void
+    {
+        console.log("game over");
     }
     
     public startgame():void
     {
-//        this.playground.addEventListener(egret.TouchEvent.TOUCH_MOVE,this.playgroundOntuchMove, this.playground);
+        this.timer.start();
         this.playground.touchEnabled = true;
         this.playground.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.touchNearBoxes, this);
         this.playground.addEventListener(egret.TouchEvent.TOUCH_MOVE,this.touchNearBoxes, this);
@@ -268,10 +290,7 @@ class GameView extends egret.Sprite
 //    }
 
 
-    private getNears(event):Array<Array<number>> {
-        
-        var x:number = event.localX;
-        var y:number = event.localY;
+    private get_nears_from_xy(x: number, y:number){
         if(x < 0 || y < 0) { 
             return Array<Array<number>>();
         }
@@ -314,6 +333,13 @@ class GameView extends egret.Sprite
         }
         return nears;
     }
+
+
+    private getNears(event):Array<Array<number>> {       
+        var x:number = event.localX;
+        var y:number = event.localY;
+        return this.get_nears_from_xy(x, y);
+    }
     
     
     private touchNearBoxes(event) {
@@ -352,5 +378,34 @@ class GameView extends egret.Sprite
         }
         console.log(sum);
         this.cur_text_field.text = sum.toString();
+        if(sum == this.target_num){
+            // console.log("=======2");
+            this.cur_text_field.backgroundColor = 0x00EE00;
+            this.passLevel();
+        }else{
+            this.cur_text_field.backgroundColor = 0xFF4040;
+        }
+    }
+
+    private passLevel():void{
+        this.game_level.pass_level();
+        this.removeChild(this.playground);
+        this.init_playground();
+        this.updateNumbers(this.game_level.box_num);
+        this.init_paly_pannel(this.game_level.box_num);
+        this.playground.touchEnabled = true;
+        this.playground.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.touchNearBoxes, this);
+        this.playground.addEventListener(egret.TouchEvent.TOUCH_MOVE,this.touchNearBoxes, this);
+        this.playground.addEventListener(egret.TouchEvent.TOUCH_END,this.touchEndNearBoxes, this);
+        this.playground.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE,this.touchEndNearBoxes, this);
+        this.get_target_num();
+        this.timeBar.graphics.clear();
+        var width = this.timeBar.width;
+        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.drawRoundRect(0, 0, width, this.timeBar.height, 10, 10);
+        this.timeBar.graphics.endFill();
+        this.timePassed = 0;
+        this.timer.reset();
+        this.timer.start();
     }
 }

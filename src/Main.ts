@@ -125,10 +125,6 @@ class Main extends egret.DisplayObjectContainer {
         var width = stageW * 0.9;
         var x = (stageW - width)/2;
         var y = stageH * 0.3;
-//        topMask.graphics.drawRoundRect(x, y, width, width, 10, 10);
-//        topMask.graphics.endFill();
-//        topMask.width = stageW;
-//        topMask.height = stageH;
         this.addChild(topMask);
         this.gv = new GameView(0, 0, stageW, stageH);
         this.addChild(this.gv);
