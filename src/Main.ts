@@ -113,7 +113,7 @@ class Main extends egret.DisplayObjectContainer {
         console.log(stageW);
         console.log(stageH);
         var topMask:egret.Shape = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.beginFill(0x9db0b1, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, stageH);
         topMask.graphics.endFill();
         topMask.width = stageW;
@@ -121,7 +121,7 @@ class Main extends egret.DisplayObjectContainer {
                         
         //画一个大框
                                 
-        topMask.graphics.beginFill(0xFFCC99, 0.5);
+        // topMask.graphics.beginFill(0xccd8d6, 0.5);
         var width = stageW * 0.9;
         var x = (stageW - width)/2;
         var y = stageH * 0.3;

@@ -48,7 +48,8 @@ class GameView extends egret.Sprite
                 var label:egret.TextField = new egret.TextField(); 
                 label.text = num.toString();
                 label.background = true;
-                label.backgroundColor = 0xFF9999;
+                //数字方块背景颜色
+                label.backgroundColor = 0xa7bfbf;
                 bit_tmp.push(label);
             }
             this.number_boxes.push(tmp);
@@ -91,7 +92,7 @@ class GameView extends egret.Sprite
         this.updateNumbers(this.game_level.box_num);
         this.get_target_num();
         this.init_paly_pannel(this.game_level.box_num);
-        this.init_paly_pannel(this.game_level.box_num);
+        // // this.init_paly_pannel(this.game_level.box_num);
         this.startgame();
     }
     
@@ -104,7 +105,8 @@ class GameView extends egret.Sprite
         level_ground.y = y;
         level_ground.width = width;
         level_ground.height = this.height * 0,2;
-        level_ground.graphics.beginFill(0xFFCC99);
+        //显示区背景颜色
+        level_ground.graphics.beginFill(0xccd8d6);
         level_ground.graphics.drawRoundRect(0, 0, width, width, 10, 10);
         level_ground.graphics.endFill();
         this.target_field = new egret.Sprite();
@@ -112,18 +114,19 @@ class GameView extends egret.Sprite
         this.target_field.y = 5;
         this.target_field.width = (width - 10) / 3;
         this.target_field.height = (width - 10) / 3;
-        this.target_field.graphics.beginFill(0x6699FF);
+        //目标值背景颜色
+        this.target_field.graphics.beginFill(0x9eaea4);
         this.target_field.graphics.drawRoundRect(0, 0, this.target_field.width, this.target_field.width, 10, 10);
         this.target_field.graphics.endFill();
         var target_label = new egret.TextField();
         target_label.text = "目标值:";
-        target_label.fontFamily = "SimHei";
-        target_label.textColor = 0xCC0000;
+        target_label.fontFamily = "Regular";
+        target_label.textColor = 0xccd8d6;
         target_label.size = target_label.size;
         target_label.width = this.target_field.width;
         target_label.height = this.target_field.height /4;
         target_label.bold = true;
-        target_label.stroke = 3;
+        // target_label.stroke = 3;
         target_label.x = 10;
         target_label.y = 5;
         this.target_field.addChild(target_label);
@@ -151,24 +154,25 @@ class GameView extends egret.Sprite
         this.score_field.y = 5;
         this.score_field.width = (width - 10) / 3;
         this.score_field.height = (width - 10) / 3;
-        this.score_field.graphics.beginFill(0x6699FF);
+        //分数值背景颜色
+        this.score_field.graphics.beginFill(0x91afbb);
         this.score_field.graphics.drawRoundRect(0, 0, this.target_field.width - 10, this.target_field.width, 10, 10);
         this.score_field.graphics.endFill();
         var score_label = new egret.TextField();
         score_label.text = "分数:";
-        score_label.fontFamily = "SimHei";
-        score_label.textColor = 0xCC0000;
+        score_label.fontFamily = "Regular";
+        score_label.textColor = 0xccd8d6;
         score_label.size = target_label.size;
         score_label.width = this.target_field.width;
         score_label.height = this.target_field.height /4;
         score_label.bold = true;
-        score_label.stroke = 3;
+        // score_label.stroke = 3;
         score_label.x = 10;
         score_label.y = 5;
         this.score_field.addChild(score_label);
         this.score_text_field = new egret.TextField();
         this.score_text_field.background = true;
-        this.score_text_field.backgroundColor = 0x6699FF
+        this.score_text_field.backgroundColor = 0x91afbb
         this.score_text_field.text = this.score.toString();
         this.score_text_field.width = this.target_field.width - 10;
         this.score_text_field.y = this.target_field.width * 0.3 
@@ -194,24 +198,25 @@ class GameView extends egret.Sprite
         this.cur_field.y = 5;
         this.cur_field.width = (width - 10) / 3;
         this.cur_field.height = (width - 10) / 3;
-        this.cur_field.graphics.beginFill(0x6699FF);
+        //点击值背景颜色
+        this.cur_field.graphics.beginFill(0xa7bfbf);
         this.cur_field.graphics.drawRoundRect(0, 0, this.target_field.width, this.target_field.width, 10, 10);
         this.cur_field.graphics.endFill();
         var cur_label = new egret.TextField();
         cur_label.text = "点击值:";
-        cur_label.fontFamily = "SimHei";
-        cur_label.textColor = 0xCC0000;
+        cur_label.fontFamily = "Regular";
+        cur_label.textColor = 0xccd8d6;
         cur_label.size = cur_label.size;
         cur_label.width = this.target_field.width;
         cur_label.height = this.target_field.height /4;
         cur_label.bold = true;
-        cur_label.stroke = 3;
+        // cur_label.stroke = 3;
         cur_label.x = 10;
         cur_label.y = 5;
         this.cur_field.addChild(cur_label);
         this.cur_text_field = new egret.TextField();
         this.cur_text_field.background = true;
-        this.cur_text_field.backgroundColor = 0x6699FF
+        this.cur_text_field.backgroundColor = 0xa7bfbf
         this.cur_text_field.text = '';
         this.cur_text_field.width = this.target_field.width;
         this.cur_text_field.y = this.target_field.width * 0.3 
@@ -233,12 +238,18 @@ class GameView extends egret.Sprite
         var width = this.width * 0.9;
         var x = (this.width - width)/2;
         var y = this.height * 0.3;
-        this.playground = new egret.Sprite();
+        if(this.playground){
+            this.playground.removeChildren();
+        }else{
+            this.playground = new egret.Sprite();
+        }
+
         this.playground.x = x;
         this.playground.y = y;
         this.playground.width = width;
         this.playground.height = width;
-        this.playground.graphics.beginFill(0xFFCC99);
+        // 游戏区背景颜色
+        this.playground.graphics.beginFill(0xccd8d6);
         this.playground.graphics.drawRoundRect(0, 0, width, width, 10, 10);
         this.playground.graphics.endFill();
         this.addChild(this.playground);
@@ -251,7 +262,7 @@ class GameView extends egret.Sprite
         
         var x = 5;
         var y = 5;
-            
+        this.playground.removeChildren();
         for(var i: number = 0;i < len;i++)
         {   
             for(var j: number = 0;j < len;j++) 
@@ -264,9 +275,9 @@ class GameView extends egret.Sprite
                 label.verticalAlign = egret.VerticalAlign.MIDDLE;
                 label.textAlign = egret.HorizontalAlign.CENTER;
                 label.fontFamily = "SimHei";
-                label.size = 80;
+                label.size = l_width * 0.8;
                 label.bold = true;
-                label.textColor = 0x646464;
+                label.textColor = 0xffffff;
                 this.playground.addChild(label);
                 x = x + l_width + 5;
             }
@@ -278,7 +289,7 @@ class GameView extends egret.Sprite
     public init_time_bar():void
     {
         this.timer = new egret.Timer(1000,10);
-        this.timeBar = new egret.Sprite();;
+        this.timeBar = new egret.Sprite();
         var width = this.width * 0.9;
 
         this.timeBar.width = width - 10;
@@ -287,7 +298,7 @@ class GameView extends egret.Sprite
         var x = (this.width - width)/2;
         this.timeBar.x = x + 5;
         this.timeBar.y = 200;
-        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.beginFill(0xa7bfbf);
         this.timeBar.graphics.drawRoundRect(0, 0, this.timeBar.width, this.timeBar.height, 10, 10);
         this.timeBar.graphics.endFill();
         
@@ -307,7 +318,7 @@ class GameView extends egret.Sprite
         this.timeBar.graphics.clear()
         // this.timeBar.width = this.timeBar.width - 10;
         var width = this.timeBar.width * (1 - this.timePassed / 10);
-        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.beginFill(0xa7bfbf);
         this.timeBar.graphics.drawRoundRect(0, 0, width, this.timeBar.height, 10, 10);
         this.timeBar.graphics.endFill();
     }
@@ -391,14 +402,14 @@ class GameView extends egret.Sprite
         var nears = this.getNears(event);
         for(var i = 0;i < this.number_boxes.length; i ++ ){ 
             for(var j = 0;j < this.number_boxes[i].length;j++) { 
-                this.number_bits[i][j].backgroundColor = 0xFF9999;
+                this.number_bits[i][j].backgroundColor = 0xa7bfbf;
             }
         }
         
         for(var k = 0;k < nears.length; k ++ ){ 
             var m = nears[k][0];
             var n = nears[k][1];
-            this.number_bits[m][n].backgroundColor = 0xFFFFFF;
+            this.number_bits[m][n].backgroundColor = 0x7ca3b5;
         }
     }
     
@@ -414,13 +425,19 @@ class GameView extends egret.Sprite
         }
         console.log(nears.toString());
         var sum = 0;
+        var nears_num = Array<Number>();
+        
         for(var k = 0;k < nears.length; k ++ ){ 
             var m = nears[k][0];
             var n = nears[k][1];
             var cur = this.number_boxes[m][n];
+            nears_num.push(cur);
             sum = cur + sum;
             this.number_bits[m][n].backgroundColor = 0xFF9999;
         }
+        console.log("ners:")
+        console.log(nears_num.toString());
+        console.log("sum")
         console.log(sum);
         this.cur_text_field.text = sum.toString();
         if(sum == this.target_num){
@@ -428,14 +445,23 @@ class GameView extends egret.Sprite
             this.cur_text_field.backgroundColor = 0x00EE00;
             this.passLevel();
         }else{
-            this.cur_text_field.backgroundColor = 0xFF4040
+            this.cur_text_field.backgroundColor = 0xFF4040;
             this.bad();
+            for(var k = 0;k < nears.length; k ++ ){ 
+            var m = nears[k][0];
+            var n = nears[k][1];
+            var cur = this.number_boxes[m][n];
+            nears_num.push(cur);
+            sum = cur + sum;
+            this.number_bits[m][n].backgroundColor = 0xa7bfbf;
+        }
         }
     }
 
     private bad():void{
         this.timePassed = this.timePassed + 2;
         this.timerFunc();
+        
     }
 
     private passLevel():void{
@@ -452,7 +478,7 @@ class GameView extends egret.Sprite
         this.get_target_num();
         this.timeBar.graphics.clear();
         var width = this.timeBar.width;
-        this.timeBar.graphics.beginFill(0x00CD00);
+        this.timeBar.graphics.beginFill(0xa7bfbf);
         this.timeBar.graphics.drawRoundRect(0, 0, width, this.timeBar.height, 10, 10);
         this.timeBar.graphics.endFill();
         this.timePassed = 0;
